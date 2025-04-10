@@ -68,7 +68,13 @@ export class OpenAiClient implements BaseClient {
 		const toolName: string = choice.message.tool_calls[0]?.function.name || "";
 		const toolParams: Record<string, unknown> = JSON.parse(choice.message.tool_calls[0]?.function.arguments) || {};
 		
-		const toolMessage: BaseMessage = {
+		const toolAlert: BaseMessage = {
+			role: "assistant",
+			content: `Calling tool "${toolName}" with arguments: ${JSON.stringify(toolParams)}`,
+			finish_reason: choice.finish_reason,
+		}
+
+		const toolResult: BaseMessage = {
 			role: "assistant",
 			content: await this.callToolAsString(toolName, toolParams),
 			finish_reason: choice.finish_reason,
@@ -78,7 +84,7 @@ export class OpenAiClient implements BaseClient {
 			},
 		}
 
-		return [...messages, newMessage, toolMessage];
+		return [...messages, newMessage, toolAlert, toolResult];
 	}
 
 	async callTool(
