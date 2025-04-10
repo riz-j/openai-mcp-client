@@ -39,7 +39,8 @@ while (attempt <= 10) {
 
 	if (["stop", "length"].includes(messages.at(-1)?.finish_reason || "undefined")) {
 		console.log(messages);
-		console.log(`Exited at attempt #${attempt}`);
+		console.log(messages.at(-1)?.content)
+		console.log(`[Exited at attempt #${attempt}]`);
 		process.exit(0);
 	}
 }
