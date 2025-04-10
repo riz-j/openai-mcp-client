@@ -2,6 +2,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { OpenAiClient } from "@/clients/OpenAiClient";
 import OpenAI from "openai";
+import type { BaseMessage } from "@/types/type";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -23,21 +24,22 @@ const openAiClient = new OpenAiClient({
 
 await openAiClient.connect();
 
+let attempt = 1;
 
-
-const result = await openAiClient.completion([
+let messages: BaseMessage[] = [
 	{ role: "system", content: "You are a helpful assistant that explains things to the user in a precise and simple manner." },
 	{ role: "user", content: "Hello! give me all tables and columns in the database." },
-]);
+];
 
-const result2 = await openAiClient.completion(result);
+while (attempt <= 10) {
+	const result = await openAiClient.completion(messages);
+	messages = result;
 
-console.log(result2);
+	attempt++;
 
-// console.log(result2);
-
-// const result = await openAiClient.callTool("add", {
-// 	a: 50,
-// 	b: 25,
-// });
-// console.log(result.content[0]?.text);
+	if (messages.at(-1)?.finish_reason == "stop") {
+		console.log(messages);
+		console.log(`Exited at attempt #${attempt}`);
+		process.exit(0);
+	}
+}
