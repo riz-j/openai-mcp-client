@@ -26,13 +26,15 @@ await openAiClient.connect();
 
 
 const result = await openAiClient.completion([
-	{ role: "system", content: "You are a helpful assistant that explains things to the user in a precise and simple manner" },
-	{ role: "user", content: `Hello! give me all tables and columns in the database` },
+	{ role: "system", content: "You are a helpful assistant that explains things to the user in a precise and simple manner." },
+	{ role: "user", content: "Hello! give me all tables and columns in the database." },
 ]);
 
 const result2 = await openAiClient.completion(result);
 
 console.log(result2);
+
+// console.log(result2);
 
 // const result = await openAiClient.callTool("add", {
 // 	a: 50,

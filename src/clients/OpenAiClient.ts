@@ -53,11 +53,12 @@ export class OpenAiClient implements BaseClient {
 			tools: this.tools,
 		});
 
-		const choice = completion.choices[0];
+		const choice: ChatCompletion.Choice = completion.choices[0];
 
 		const newMessage: BaseMessage = {
 			role: choice.message.role,
 			content: choice.message.content || "[empty]",
+			finish_reason: choice.finish_reason,
 		}
 
 		if (!choice.message.tool_calls) {
@@ -73,6 +74,8 @@ export class OpenAiClient implements BaseClient {
 		}
 		
 		newMessage.content = await this.callToolAsString(toolName, toolParams);
+
+		// console.log(choice); process.exit(0);
 
 		return [...messages, newMessage];
 	}
