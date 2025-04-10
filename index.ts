@@ -52,10 +52,13 @@ while (attempt <= 10) {
 	const result = await openAiClient.completion(messages);
 	messages = result;
 
+	console.clear();
+	console.log(messages);
+
 	attempt++;
 
 	if (["stop", "length"].includes(messages.at(-1)?.finish_reason || "undefined")) {
-		console.log(messages);
+		// console.log(messages);
 		console.log(messages.at(-1)?.content)
 		console.log(`[Exited at attempt #${attempt}]`);
 		process.exit(0);

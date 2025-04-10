@@ -67,17 +67,18 @@ export class OpenAiClient implements BaseClient {
 
 		const toolName: string = choice.message.tool_calls[0]?.function.name || "";
 		const toolParams: Record<string, unknown> = JSON.parse(choice.message.tool_calls[0]?.function.arguments) || {};
-
-		newMessage.tool_call = {
-			tool_name: toolName,
-			tool_arguments: toolParams,
-		}
 		
-		newMessage.content = await this.callToolAsString(toolName, toolParams);
+		const toolMessage: BaseMessage = {
+			role: "assistant",
+			content: await this.callToolAsString(toolName, toolParams),
+			finish_reason: choice.finish_reason,
+			tool_call: {
+				tool_name: toolName,
+				tool_arguments: toolParams,
+			},
+		}
 
-		// console.log(choice); process.exit(0);
-
-		return [...messages, newMessage];
+		return [...messages, newMessage, toolMessage];
 	}
 
 	async callTool(
