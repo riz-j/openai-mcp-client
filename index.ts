@@ -3,6 +3,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { OpenAiClient } from "@/clients/OpenAiClient";
 import OpenAI from "openai";
 import type { BaseMessage } from "@/types/type";
+import readline from 'readline/promises';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -24,12 +25,23 @@ const openAiClient = new OpenAiClient({
 
 await openAiClient.connect();
 
-let attempt = 1;
+const systemPrompt = `You are a helpful assistant that explains things to the user in a precise and simple manner.
+Prior to making any database queries, you will call the tool "get-database-tables-and-columns" to get the list of tables and columns in the database.
+`;
+
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+});
+
+const question = await rl.question("Type your question: ");
 
 let messages: BaseMessage[] = [
-	{ role: "system", content: "You are a helpful assistant that explains things to the user in a precise and simple manner." },
-	{ role: "user", content: "Give me all the clients in the database. Prior to making a select query, get the database tables and columns first." },
+	{ role: "system", content: systemPrompt },
+	{ role: "user", content: question },
 ];
+
+let attempt = 1;
 
 while (attempt <= 10) {
 	const result = await openAiClient.completion(messages);
