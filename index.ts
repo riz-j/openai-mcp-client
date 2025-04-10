@@ -30,8 +30,12 @@ const openAiClient = new OpenAiClient({
 
 await openAiClient.connect();
 
-const systemPrompt = `You are a helpful assistant that explains things to the user in a precise and simple manner.
-Prior to executing any database queries, you will call the tool to get the tables and columns of the database.
+const systemPrompt = `You are a knowledgeable and helpful assistant who provides clear, concise, and precise explanations.
+Before executing any database query, you must invoke the tool to retrieve the current schema, specifically the list of tables and their associated columns.
+Ensure that you call only one tool at a time, executing each call sequentially.
+Rely on your independent reasoning and analysis to determine the best course of action rather than solely depending on the user's input.
+Persist in refining your approach and responses until the user's requirements are fully met.
+It is very important that when you make an insert, update, or delete statement, you must re-verify the data to make sure the changes are applied correctly.
 `;
 
 const rl = readline.createInterface({
@@ -58,10 +62,11 @@ while (true) {
 	}
 	
 	if (["stop", "length"].includes(messages.at(-1)?.finish_reason || "undefined")) {
+		console.log(messages.at(-1)?.content);
+
 		const question = await rl.question("Type your question: ");
 		messages.push({ role: "user", content: question });
 
-		// console.log(messages.at(-1)?.content)
 		// process.exit(0);
 	}
 }
