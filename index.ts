@@ -23,21 +23,15 @@ const openAiClient = new OpenAiClient({
 
 await openAiClient.connect();
 
-// console.log(openAiClient.tools);
-
-// const completion = await openai.chat.completions.create({
-// 	model: "gpt-4o-mini",
-// 	messages: [
-// 		{ role: "user", content: "Hello! Add 5 with 25" },
-// 	],
-// 	tools: openAiClient.tools,
-// 	tool_choice: "auto",
-// });
-// console.log(JSON.stringify(completion.choices[0], null, 2));
 
 
 const result = await openAiClient.completion([
 	{ role: "user", content: `Hello! Add 5 with 25!` },
 ]);
-
 console.log(result);
+
+// const result = await openAiClient.callTool("add", {
+// 	a: 50,
+// 	b: 25,
+// });
+// console.log(result.content[0]?.text);

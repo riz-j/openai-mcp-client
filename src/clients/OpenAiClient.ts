@@ -61,10 +61,15 @@ export class OpenAiClient implements BaseClient {
 		}
 
 		if (choice.message.tool_calls) {
+			const toolName: string = choice.message.tool_calls[0]?.function.name || "";
+			const toolParams: Record<string, unknown> = JSON.parse(choice.message.tool_calls[0]?.function.arguments) || {};
+
 			baseMessage.tool_call = {
-				tool_name: choice.message.tool_calls[0]?.function.name || "",
-				tool_arguments: JSON.parse(choice.message.tool_calls[0]?.function.arguments) || {},
+				tool_name: toolName,
+				tool_arguments: toolParams,
 			}
+			
+			baseMessage.content = await this.callToolAsString(toolName, toolParams);
 		}
 
 		return [...messages, baseMessage];
@@ -80,5 +85,17 @@ export class OpenAiClient implements BaseClient {
 		});
 
 		return result as ToolCallResult;
+	}
+
+	async callToolAsString(
+		tool_name: string,
+		params: Record<string, unknown> | null
+	): Promise<string> {
+		const result = await this.client.callTool({
+			name: tool_name,
+			arguments: params || {},
+		}) as ToolCallResult;
+
+		return result.content[0]?.text || "[empty]";
 	}
 }
