@@ -1,16 +1,16 @@
 import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import type { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { type BaseClient } from "./client.type";
-import { type FunctionTool } from "openai/resources/responses/responses.mjs";
 import { type Tool } from "@modelcontextprotocol/sdk/types.js";
 import type OpenAI from "openai";
+import { type ChatCompletionTool } from "openai/resources.mjs";
 
 export class OpenAiClient implements BaseClient {
 	client: Client;
 	transport: StdioClientTransport;
 	provider: OpenAI;
 
-	tools: FunctionTool[];
+	tools: ChatCompletionTool[];
 
 	constructor({
 		client,
@@ -34,9 +34,12 @@ export class OpenAiClient implements BaseClient {
 		const toolsResult = await this.client.listTools();
 
 		this.tools = toolsResult.tools.map((tool: Tool) => ({
-			name: tool.name,
-			parameters: tool.inputSchema,
-			strict: true,
+			function: {
+				name: tool.name,
+				description: tool.description,
+				parameters: tool.inputSchema,
+				strict: true,
+			},
 			type: "function",
 		}));
 	}

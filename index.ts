@@ -23,4 +23,13 @@ const openAiClient = new OpenAiClient({
 
 await openAiClient.connect();
 
-console.log(openAiClient.tools);
+// console.log(openAiClient.tools);
+
+const completion = await openai.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [
+    { role: "user", content: "Hello!" },
+  ],
+  tools: openAiClient.tools,
+  tool_choice: "auto",
+});
