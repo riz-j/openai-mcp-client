@@ -28,7 +28,7 @@ let attempt = 1;
 
 let messages: BaseMessage[] = [
 	{ role: "system", content: "You are a helpful assistant that explains things to the user in a precise and simple manner." },
-	{ role: "user", content: "Hello! give me all tables and columns in the database." },
+	{ role: "user", content: "Give me all the clients in the database. Prior to making a select query, get the database tables and columns first." },
 ];
 
 while (attempt <= 10) {
@@ -37,7 +37,7 @@ while (attempt <= 10) {
 
 	attempt++;
 
-	if (messages.at(-1)?.finish_reason == "stop") {
+	if (["stop", "length"].includes(messages.at(-1)?.finish_reason || "undefined")) {
 		console.log(messages);
 		console.log(`Exited at attempt #${attempt}`);
 		process.exit(0);
