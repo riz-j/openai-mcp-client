@@ -3,7 +3,7 @@ import type { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdi
 import { type BaseClient } from "./client.type";
 import { type Tool } from "@modelcontextprotocol/sdk/types.js";
 import type OpenAI from "openai";
-import { type ChatCompletionTool } from "openai/resources.mjs";
+import { type ChatCompletionMessageParam, type ChatCompletionTool } from "openai/resources.mjs";
 
 export class OpenAiClient implements BaseClient {
 	client: Client;
@@ -42,5 +42,9 @@ export class OpenAiClient implements BaseClient {
 			},
 			type: "function",
 		}));
+	}
+
+	async completion<ChatCompletionMessageParam>(messages: Array<ChatCompletionMessageParam>): Promise<Array<ChatCompletionMessageParam>> {
+		return []
 	}
 }
