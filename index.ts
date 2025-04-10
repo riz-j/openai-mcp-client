@@ -1,6 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { OpenAiClient } from "./OpenAiClient";
+import { OpenAiClient } from "@/clients/OpenAiClient";
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -37,7 +37,7 @@ await openAiClient.connect();
 
 
 const result = await openAiClient.completion([
-	{ role: "user", content: "Hello! Add 5 with 25" },
+	{ role: "user", content: "Hello!" },
 ]);
 
 console.log(result);
