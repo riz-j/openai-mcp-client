@@ -1,6 +1,6 @@
 import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import type { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { type BaseClient, type BaseMessage } from "@/type";
+import { type BaseClient, type BaseMessage } from "@/types/type";
 import { type Tool } from "@modelcontextprotocol/sdk/types.js";
 import type OpenAI from "openai";
 import type { ChatCompletion, ChatCompletionTool } from "openai/resources.mjs";
@@ -55,7 +55,7 @@ export class OpenAiClient implements BaseClient {
 
 		const baseMessage: BaseMessage = {
 			role: choice.message.role,
-			content: choice.message.content || "No Content",
+			content: choice.message.content || "[empty]",
 		}
 
 		if (choice.message.tool_calls) {

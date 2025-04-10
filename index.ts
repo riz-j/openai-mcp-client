@@ -37,7 +37,7 @@ await openAiClient.connect();
 
 
 const result = await openAiClient.completion([
-	{ role: "user", content: "Hello!" },
+	{ role: "user", content: `Hello! Add 5 with 25!` },
 ]);
 
 console.log(result);
