@@ -3,7 +3,19 @@ import type { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdi
 import { type BaseClient } from "./client.type";
 import { type Tool } from "@modelcontextprotocol/sdk/types.js";
 import type OpenAI from "openai";
-import { type ChatCompletionMessageParam, type ChatCompletionTool } from "openai/resources.mjs";
+import { type ChatCompletion, type ChatCompletionMessageParam, type ChatCompletionTool } from "openai/resources.mjs";
+import type { ToolChoiceFunction } from "openai/resources/responses/responses.mjs";
+
+interface ToolCall {
+	tool_name: string;
+	tool_arguments: Record<string, unknown>;
+}
+
+interface BaseMessage {
+	role: "system" | "user" | "assistant";
+	content: string;
+	tool_call?: ToolCall;
+}
 
 export class OpenAiClient implements BaseClient {
 	client: Client;
@@ -44,7 +56,24 @@ export class OpenAiClient implements BaseClient {
 		}));
 	}
 
-	async completion<ChatCompletionMessageParam>(messages: Array<ChatCompletionMessageParam>): Promise<Array<ChatCompletionMessageParam>> {
-		return []
+	async completion(messages: Array<BaseMessage>): Promise<Array<BaseMessage>> {
+		const completion: ChatCompletion = await this.provider.chat.completions.create({
+			model: "gpt-4o-mini",
+			messages,
+			tools: this.tools,
+		});
+
+		const choice = completion.choices[0];
+
+		const baseMessage: BaseMessage = {
+			role: choice.message.role,
+			content: choice.message.content || "No Content",
+			tool_call: {
+				tool_name: choice.message.tool_calls[0].function.name || "",
+				tool_arguments: JSON.parse(choice.message.tool_calls[0].function.arguments) || {},
+			}
+		}
+
+		return [...messages, baseMessage];
 	}
 }

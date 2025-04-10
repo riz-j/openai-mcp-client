@@ -25,13 +25,19 @@ await openAiClient.connect();
 
 // console.log(openAiClient.tools);
 
-const completion = await openai.chat.completions.create({
-	model: "gpt-4o-mini",
-	messages: [
-		{ role: "user", content: "Hello! Add 5 with 25" },
-	],
-	tools: openAiClient.tools,
-	tool_choice: "auto",
-});
+// const completion = await openai.chat.completions.create({
+// 	model: "gpt-4o-mini",
+// 	messages: [
+// 		{ role: "user", content: "Hello! Add 5 with 25" },
+// 	],
+// 	tools: openAiClient.tools,
+// 	tool_choice: "auto",
+// });
+// console.log(JSON.stringify(completion.choices[0], null, 2));
 
-console.log(JSON.stringify(completion.choices, null, 2));
+
+const result = await openAiClient.completion([
+	{ role: "user", content: "Hello! Add 5 with 25" },
+]);
+
+console.log(result);
