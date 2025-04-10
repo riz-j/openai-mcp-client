@@ -1,6 +1,6 @@
 import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import type { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { type BaseClient, type BaseMessage } from "@/types/type";
+import { type BaseClient, type BaseMessage, type ToolCallResult } from "@/types/type";
 import { type Tool } from "@modelcontextprotocol/sdk/types.js";
 import type OpenAI from "openai";
 import type { ChatCompletion, ChatCompletionTool } from "openai/resources.mjs";
@@ -44,7 +44,9 @@ export class OpenAiClient implements BaseClient {
 		}));
 	}
 
-	async completion(messages: Array<BaseMessage>): Promise<Array<BaseMessage>> {
+	async completion(
+		messages: Array<BaseMessage>
+	): Promise<Array<BaseMessage>> {
 		const completion: ChatCompletion = await this.provider.chat.completions.create({
 			model: "gpt-4o-mini",
 			messages,
@@ -66,5 +68,17 @@ export class OpenAiClient implements BaseClient {
 		}
 
 		return [...messages, baseMessage];
+	}
+
+	async callTool(
+		tool_name: string,
+		params: Record<string, unknown> | null
+	): Promise<ToolCallResult> {
+		const result = await this.client.callTool({
+			name: tool_name,
+			arguments: params || {},
+		});
+
+		return result as ToolCallResult;
 	}
 }

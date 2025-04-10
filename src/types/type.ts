@@ -7,6 +7,13 @@ export interface ToolCall {
 	tool_arguments: Record<string, unknown>;
 }
 
+export interface ToolCallResult {
+	content: Array<{
+		type: "text";
+		text: string;
+	}>;
+}
+
 export interface BaseMessage {
 	role: "system" | "user" | "assistant";
 	content: string;

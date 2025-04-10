@@ -16,11 +16,11 @@ await client.connect(transport);
 const tools = await client.listTools();
 console.log(tools.tools.map(tool => tool.inputSchema));
 
-// const result = await client.callTool({
-// 	name: "get-database-tables-and-columns",
-// 	arguments: {
-// 		any: true,
-// 	}
-// });
+const result = await client.callTool({
+	name: "get-database-tables-and-columns",
+	arguments: {
+		any: true,
+	}
+});
 
-// console.log(result);
+console.log(result);
