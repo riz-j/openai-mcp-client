@@ -39,28 +39,29 @@ const rl = readline.createInterface({
 	output: process.stdout,
 });
 
-const question = await rl.question("Type your question: ");
-
 let messages: BaseMessage[] = [
 	{ role: "system", content: systemPrompt },
-	{ role: "user", content: question },
 ];
 
-let attempt = 1;
+const question = await rl.question("Type your question: ");
 
-while (attempt <= 10) {
-	const result = await openAiClient.completion(messages);
-	messages = result;
+while (true) {
+	if (messages.length <= 1) {
+		messages.push({ role: "user", content: question });
+	}
+
+	messages = await openAiClient.completion(messages);
 
 	console.clear();
-	console.log(messages);
-
-	attempt++;
-
+	for (const message of messages) {
+		console.log(message);
+	}
+	
 	if (["stop", "length"].includes(messages.at(-1)?.finish_reason || "undefined")) {
-		// console.log(messages);
-		console.log(messages.at(-1)?.content)
-		console.log(`[Exited at attempt #${attempt}]`);
-		process.exit(0);
+		const question = await rl.question("Type your question: ");
+		messages.push({ role: "user", content: question });
+
+		// console.log(messages.at(-1)?.content)
+		// process.exit(0);
 	}
 }
