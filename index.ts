@@ -5,6 +5,11 @@ import OpenAI from "openai";
 import type { BaseMessage } from "@/types/type";
 import readline from 'readline/promises';
 
+if (!process.env.OPENAI_API_KEY) {
+	console.error("OPENAI_API_KEY is not set");
+	process.exit(1);
+}
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const transport = new StdioClientTransport({
