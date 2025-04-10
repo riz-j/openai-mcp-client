@@ -7,7 +7,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const transport = new StdioClientTransport({
 	command: "bun",
-	args: ["/home/rizki/Code/mcp/apps/calculator/server.js"]
+	args: ["/home/rizki/Code/mcp/apps/postgres/server.ts"]
 });
 
 const client = new Client({
@@ -26,9 +26,13 @@ await openAiClient.connect();
 
 
 const result = await openAiClient.completion([
-	{ role: "user", content: `Hello! Add 5 with 25!` },
+	{ role: "system", content: "You are a helpful assistant that explains things to the user in a precise and simple manner" },
+	{ role: "user", content: `Hello! give me all tables and columns in the database` },
 ]);
-console.log(result);
+
+const result2 = await openAiClient.completion(result);
+
+console.log(result2);
 
 // const result = await openAiClient.callTool("add", {
 // 	a: 50,
