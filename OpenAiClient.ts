@@ -68,9 +68,12 @@ export class OpenAiClient implements BaseClient {
 		const baseMessage: BaseMessage = {
 			role: choice.message.role,
 			content: choice.message.content || "No Content",
-			tool_call: {
-				tool_name: choice.message.tool_calls[0].function.name || "",
-				tool_arguments: JSON.parse(choice.message.tool_calls[0].function.arguments) || {},
+		}
+
+		if (choice.message.tool_calls) {
+			baseMessage.tool_call = {
+				tool_name: choice.message.tool_calls[0]?.function.name || "",
+				tool_arguments: JSON.parse(choice.message.tool_calls[0]?.function.arguments) || {},
 			}
 		}
 
