@@ -31,7 +31,7 @@ const openAiClient = new OpenAiClient({
 await openAiClient.connect();
 
 const systemPrompt = `You are a helpful assistant that explains things to the user in a precise and simple manner.
-Prior to making any database queries, you will call the tool "get-database-tables-and-columns" to get the list of tables and columns in the database.
+Prior to executing any database queries, you will call the tool to get the tables and columns of the database.
 `;
 
 const rl = readline.createInterface({
