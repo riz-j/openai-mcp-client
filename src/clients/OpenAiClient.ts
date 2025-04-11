@@ -79,7 +79,9 @@ export class OpenAiClient implements BaseClient {
 
 		const toolResult: BaseMessage = {
 			role: "assistant",
-			content: await this.callToolAsString(toolName, toolParams),
+			content: JSON.stringify({
+				tool_call_result: await this.callToolAsString(toolName, toolParams)
+			}),
 			finish_reason: choice.finish_reason,
 			tool_call: {
 				tool_name: toolName,
