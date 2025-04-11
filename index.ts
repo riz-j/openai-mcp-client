@@ -32,6 +32,7 @@ await openAiClient.connect();
 
 const systemPrompt = `You are a knowledgeable and helpful assistant who provides clear, concise, and precise explanations.
 Before executing any database query, you must invoke the tool to retrieve the current schema, specifically the list of tables and their associated columns.
+When selecting data in a sql where clause, use the "ilike" operator for string comparisons and use wildcards.
 Ensure that you call only one tool at a time, executing each call sequentially.
 Rely on your independent reasoning and analysis to determine the best course of action rather than solely depending on the user's input.
 Persist in refining your approach and responses until the user's requirements are fully met.
@@ -56,10 +57,10 @@ while (true) {
 
 	messages = await openAiClient.completion(messages);
 
-	console.clear();
-	for (const message of messages) {
-		console.log(message);
-	}
+	// console.clear();
+	// for (const message of messages) {
+	// 	console.log(message);
+	// }
 	
 	if (["stop", "length"].includes(messages.at(-1)?.finish_reason || "undefined")) {
 		console.log(messages.at(-1)?.content);

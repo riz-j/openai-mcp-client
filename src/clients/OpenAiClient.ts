@@ -71,6 +71,8 @@ export class OpenAiClient implements BaseClient {
 		const toolName: string = choice.message.tool_calls[0]?.function.name || "";
 		const toolParams: Record<string, unknown> = JSON.parse(choice.message.tool_calls[0]?.function.arguments) || {};
 		
+		console.log(`Calling Tool [[ ${toolName} ]] with params: \n${JSON.stringify(toolParams)}`);
+
 		// const toolAlert: BaseMessage = {
 		// 	role: "assistant",
 		// 	content: `Calling tool "${toolName}" with arguments: ${JSON.stringify(toolParams)}`,
