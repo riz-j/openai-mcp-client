@@ -71,11 +71,11 @@ export class OpenAiClient implements BaseClient {
 		const toolName: string = choice.message.tool_calls[0]?.function.name || "";
 		const toolParams: Record<string, unknown> = JSON.parse(choice.message.tool_calls[0]?.function.arguments) || {};
 		
-		const toolAlert: BaseMessage = {
-			role: "assistant",
-			content: `Calling tool "${toolName}" with arguments: ${JSON.stringify(toolParams)}`,
-			finish_reason: choice.finish_reason,
-		}
+		// const toolAlert: BaseMessage = {
+		// 	role: "assistant",
+		// 	content: `Calling tool "${toolName}" with arguments: ${JSON.stringify(toolParams)}`,
+		// 	finish_reason: choice.finish_reason,
+		// }
 
 		const toolResult: BaseMessage = {
 			role: "assistant",
@@ -89,7 +89,7 @@ export class OpenAiClient implements BaseClient {
 			},
 		}
 
-		return [...messages, newMessage, toolAlert, toolResult];
+		return [...messages, newMessage, toolResult];
 	}
 
 	async callTool(
