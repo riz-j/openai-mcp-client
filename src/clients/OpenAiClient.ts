@@ -4,6 +4,7 @@ import { type BaseClient, type BaseMessage, type ToolCallResult } from "@/types/
 import { type Tool } from "@modelcontextprotocol/sdk/types.js";
 import type OpenAI from "openai";
 import type { ChatCompletion, ChatCompletionTool } from "openai/resources.mjs";
+import { ToolHelper } from "@/tools/ToolHelper";
 
 export class OpenAiClient implements BaseClient {
 	client: Client;
@@ -37,7 +38,9 @@ export class OpenAiClient implements BaseClient {
 			function: {
 				name: tool.name,
 				description: tool.description,
-				parameters: tool.inputSchema,
+				parameters: tool.inputSchema.properties
+					? tool.inputSchema
+					: ToolHelper.emptyTool(),
 				strict: true,
 			},
 			type: "function",
